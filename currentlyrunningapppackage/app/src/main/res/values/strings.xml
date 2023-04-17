@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">currentlyrunningapppackage</string>
+    <string name="shared_preferences_key">com.kontra.currentlyrunningapppackage_PREFERENCE_FILE_KEY</string>
+    <string name="service_started">SERVICE_STARTED</string>
+    <string name="label_start_service">Start Service</string>
+    <string name="label_stop_service">Stop Service</string>
+    <string name="label_service_started">Service Started</string>
+    <string name="label_service_stopped">Service Stopped</string>
+</resources>
