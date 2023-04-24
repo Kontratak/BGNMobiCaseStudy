@@ -1,54 +1,26 @@
-package com.kontra.currentlyrunningapppackage
+package com.kontra.currentlyrunningapppackage.services
 
-import android.app.ActivityManager
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Handler
 import android.os.IBinder
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.kontra.currentlyrunningapppackage.R
 
-
+//this service keeps app alive on background
 class ForegroundService : Service() {
+
+
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
 
-    private lateinit var window: Window
-
-
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        window = Window.getInstance(this)
-        window.open()
-        checkActivity(this)
         return super.onStartCommand(intent, flags, startId)
-    }
-
-
-    override fun onDestroy() {
-        window.close()
-        super.onDestroy()
-    }
-
-    var handler = Handler()
-
-    fun checkActivity(context: Context) {
-        var activityRunnable = ActivityRunnable(handler,context)
-        handler.postDelayed(activityRunnable, 500)
-    }
-
-    private class ActivityRunnable(var handler: Handler,var context: Context) : Runnable {
-        override fun run() {
-            if(Utils.isServiceStarted(context)){
-                Window.getInstance(context).changePackageName()
-            }
-            handler.postDelayed(this, 500)
-        }
     }
 
     // for android version >=O we need to create

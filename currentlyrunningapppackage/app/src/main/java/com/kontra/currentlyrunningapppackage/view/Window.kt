@@ -1,33 +1,22 @@
-package com.kontra.currentlyrunningapppackage
+package com.kontra.currentlyrunningapppackage.view
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
 import android.os.Build
 import android.util.Log
 import android.view.*
-import com.kontra.currentlyrunningapppackage.databinding.ActivityMainBinding
+import com.kontra.currentlyrunningapppackage.BuildConfig
 import com.kontra.currentlyrunningapppackage.databinding.PopupWindowBinding
+import com.kontra.currentlyrunningapppackage.utils.Utils
 
-class Window(  // declaring required variables
-    private val context: Context
-) {
-    companion object{
 
-       @SuppressLint("StaticFieldLeak")
-       var windowInstance : Window? = null
-
-        fun getInstance(context: Context) : Window{
-            if(windowInstance == null)
-                windowInstance = Window(context)
-            return windowInstance!!
-        }
-    }
+class Window constructor(private val utils: Utils,private val context: Context,onWindowClosed : () -> Unit) {
 
     private var mParams: WindowManager.LayoutParams? = null
     private val mWindowManager: WindowManager
     private val layoutInflater: LayoutInflater
     private var binding: PopupWindowBinding
+
     fun open() {
         try {
             // check if the view is already
@@ -48,8 +37,6 @@ class Window(  // declaring required variables
             (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).removeView(binding.root)
             // invalidate the view
             binding.root.invalidate()
-            // remove all views
-            (binding.root as ViewGroup).removeAllViews()
 
             // the above steps are necessary when you are adding and removing
             // the view simultaneously, it might give some exceptions
@@ -71,15 +58,15 @@ class Window(  // declaring required variables
                 PixelFormat.TRANSLUCENT
             )
         }
+
         // getting a LayoutInflater
         layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         binding = PopupWindowBinding.inflate(layoutInflater)
-        var appName = Utils.currentAppPackageNameOnForeground(context)
-        binding.titleText.text = appName ?: ""
+        binding.titleText.text = BuildConfig.APPLICATION_ID
 
         // set onClickListener on the remove button, which removes
         binding.windowClose.setOnClickListener{
-            close()
+            onWindowClosed()
         }
         // the view from the window
         // Define the position of the
@@ -88,8 +75,7 @@ class Window(  // declaring required variables
         mWindowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     }
 
-    fun changePackageName(){
-        var appName = Utils.currentAppPackageNameOnForeground(context)
-        binding.titleText.text = appName ?: ""
+    fun changePackageName(s: String) {
+        binding.titleText.text = s
     }
 }
